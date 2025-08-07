@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 import gradio as gr
 from PIL import Image
 from transformers import BlipProcessor, BlipForConditionalGeneration
@@ -13,18 +12,13 @@ def generate_caption(image: Image.Image) -> str:
     caption = processor.decode(outputs[0], skip_special_tokens=True)
     return caption
 
-# Define Gradio Interface
-gradio_app = gr.Interface(
+# Create the Gradio app
+demo = gr.Interface(
     fn=generate_caption,
     inputs=gr.Image(label="Upload Image", type="pil"),
     outputs=gr.Textbox(label="Generated Caption"),
-    title="AI Image Captioning"
-).launch(share=True)
+    title="AI Image Captioning with BLIP"
+)
 
-# Create FastAPI app
-app = FastAPI()
-
-# Mount Gradio inside FastAPI
-app = gr.mount_gradio_app(app, gradio_app, path="/")
-
-
+# Launch Gradio
+demo.launch()
